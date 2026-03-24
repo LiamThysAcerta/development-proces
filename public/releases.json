@@ -7,13 +7,22 @@
     "firstTstDeployDate": "2026-02-20",
     "currentAccRound": 2,
     "description": "Content 06/02/2026 | TST 20/02/2026",
-    "team": ["Release Team"],
+    "team": [
+      "Release Team"
+    ],
     "repositoryUrl": "https://github.com/org/repo",
     "prdDeployDate": "2026-03-19",
     "prdSetupDate": "2026-03-13",
     "accDeployments": [
-      { "id": "rel-mrt-acc-1", "date": "2026-02-24" },
-      { "id": "rel-mrt-acc-2", "date": "2026-03-12", "notes": "Final ACC round" }
+      {
+        "id": "rel-mrt-acc-1",
+        "date": "2026-02-24"
+      },
+      {
+        "id": "rel-mrt-acc-2",
+        "date": "2026-03-12",
+        "notes": "Final ACC round"
+      }
     ],
     "phases": [
       {
@@ -51,7 +60,9 @@
         "targetBranch": "main",
         "sourceBranch": "release/rel-mrt",
         "author": "Release Bot",
-        "reviewers": ["Team Lead"],
+        "reviewers": [
+          "Team Lead"
+        ],
         "createdAt": "2026-02-20",
         "updatedAt": "2026-02-20"
       }
@@ -60,18 +71,27 @@
   {
     "id": "rel-apr",
     "version": "26.04.0",
-    "branchName": "release/2026-04",
+    "branchName": "release/26.04.0",
     "status": "development",
     "firstTstDeployDate": "2026-03-26",
     "currentAccRound": 1,
-    "description": "Content 06/03/2026 | TST 26/03/2026",
-    "team": ["Release Team"],
-    "repositoryUrl": "https://github.com/org/repo",
+    "description": "CON-xxxx",
+    "team": [
+      "Connect"
+    ],
+    "repositoryUrl": "https://github.com/Acerta-Payroll-Service/connect",
     "prdDeployDate": "2026-04-16",
     "prdSetupDate": "2026-04-10",
     "accDeployments": [
-      { "id": "rel-apr-acc-1", "date": "2026-04-01" },
-      { "id": "rel-apr-acc-2", "date": "2026-04-09", "notes": "Final ACC round" }
+      {
+        "id": "rel-apr-acc-1",
+        "date": "2026-04-01"
+      },
+      {
+        "id": "rel-apr-acc-2",
+        "date": "2026-04-09",
+        "notes": "Final ACC round"
+      }
     ],
     "phases": [
       {
@@ -102,17 +122,71 @@
     "prs": [
       {
         "id": "rel-apr-pr",
-        "title": "Release checklist 26.04.0",
+        "title": "release/26.04.0",
         "number": 501,
-        "url": "https://github.com/org/repo/pull/501",
-        "status": "draft",
-        "targetBranch": "main",
+        "url": "https://github.com/Acerta-Payroll-Service/connect/pull/501",
+        "status": "merged",
+        "targetBranch": "develop",
         "sourceBranch": "release/rel-apr",
         "author": "Release Bot",
-        "reviewers": ["Team Lead"],
+        "reviewers": [
+          "Team Lead"
+        ],
         "createdAt": "2026-03-26",
-        "updatedAt": "2026-03-26"
+        "updatedAt": "2026-03-24"
       }
     ]
+  },
+  {
+    "id": "rel-1774381366664",
+    "version": "26.05.0",
+    "branchName": "release/26.05.0",
+    "status": "development",
+    "firstTstDeployDate": "2026-04-17",
+    "currentAccRound": 1,
+    "description": "con-xxxx",
+    "team": [
+      "Connect FE"
+    ],
+    "repositoryUrl": "https://github.com/Acerta-Payroll-Service/connect",
+    "accDeployments": [
+      {
+        "id": "acc-1774381366664-0",
+        "date": "2026-04-21"
+      },
+      {
+        "id": "acc-1774381366664-1",
+        "date": "2026-05-12"
+      }
+    ],
+    "prdDeployDate": "2026-05-19",
+    "prdSetupDate": "2026-05-15",
+    "phases": [
+      {
+        "id": "ph-1774381366664-tst",
+        "name": "TST Development",
+        "environment": "TST",
+        "startDate": "2026-04-17",
+        "endDate": "2026-04-21",
+        "completed": false
+      },
+      {
+        "id": "ph-1774381366664-acc",
+        "name": "ACC Testing",
+        "environment": "ACC",
+        "startDate": "2026-04-21",
+        "endDate": "2026-05-12",
+        "completed": false
+      },
+      {
+        "id": "ph-1774381366664-prd",
+        "name": "PRD Deployment",
+        "environment": "PRD",
+        "startDate": "2026-05-15",
+        "endDate": "2026-05-19",
+        "completed": false
+      }
+    ],
+    "prs": []
   }
 ]
