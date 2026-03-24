@@ -1,0 +1,667 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- ── Header ────────────────────────────────────────────── -->
+  <header class="sticky top-0 z-20 border-b border-gray-200 bg-white shadow-sm">
+    <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3 py-3">
+        <a
+          routerLink="/dashboard"
+          class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+        >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Dashboard
+        </a>
+        <div class="h-5 w-px bg-gray-200"></div>
+        <div class="flex items-center gap-2">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+            <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-bold leading-tight text-gray-900">Development Process Guide</p>
+            <p class="text-xs text-gray-500">The life of a release: DEV &rarr; TST &rarr; ACC &rarr; PRD</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Content ───────────────────────────────────────────── -->
+  <main class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
+
+    <!-- ── Overview ──────────────────────────────────────── -->
+    <section class="mb-10">
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">Release Lifecycle</h1>
+      <p class="text-sm text-gray-600 max-w-3xl">
+        Every release follows a structured path through four environments. Each environment has its own purpose, statuses, and actions.
+        This guide explains what happens at every stage so any developer can understand exactly where a release is and what needs to happen next.
+      </p>
+    </section>
+
+    <!-- ── Environments overview ─────────────────────────── -->
+    <section class="mb-10">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Environments</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- DEV -->
+        <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div class="mb-3 flex items-center gap-2">
+            <app-status-badge status="DEV" />
+          </div>
+          <p class="text-xs text-gray-600">
+            Local development environment. Developers work on feature branches and push code here freely.
+            DEV is loosely managed &mdash; no formal status tracking or release gates apply.
+          </p>
+        </div>
+        <!-- TST -->
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div class="mb-3 flex items-center gap-2">
+            <app-status-badge status="TST" />
+          </div>
+          <p class="text-xs text-gray-600">
+            Test environment. The <span class="font-medium text-gray-800">develop</span> branch holds all work
+            for the next ACC release. Developers create, merge &amp; review PRs to develop during this period.
+          </p>
+        </div>
+        <!-- ACC -->
+        <div class="rounded-xl border border-blue-200 bg-white p-5 shadow-sm">
+          <div class="mb-3 flex items-center gap-2">
+            <app-status-badge status="ACC" />
+          </div>
+          <p class="text-xs text-gray-600">
+            Acceptance environment. A release branch is cut from develop, reviewed, and deployed.
+            Multiple ACC rounds can happen for the same release. Only the last round advances to PRD.
+          </p>
+        </div>
+        <!-- PRD -->
+        <div class="rounded-xl border border-orange-200 bg-white p-5 shadow-sm">
+          <div class="mb-3 flex items-center gap-2">
+            <app-status-badge status="PRD" />
+          </div>
+          <p class="text-xs text-gray-600">
+            Production. The final release branch is merged into <span class="font-medium text-gray-800">main</span>
+            and <span class="font-medium text-gray-800">develop</span> after a successful deploy.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Full status flow diagram ──────────────────────── -->
+    <section class="mb-10">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Status Flow</h2>
+      <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm overflow-x-auto">
+        <div class="flex items-center gap-2 flex-wrap min-w-max">
+          <!-- TST -->
+          <div class="flex items-center gap-2">
+            <span class="rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs font-bold text-slate-600">TST</span>
+            <app-status-badge status="development" />
+          </div>
+
+          <svg class="h-5 w-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+
+          <!-- ACC -->
+          <div class="flex items-center gap-2">
+            <span class="rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-700">ACC</span>
+            <app-status-badge status="acc-setup" />
+            <svg class="h-4 w-4 shrink-0 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <app-status-badge status="acc-review" />
+            <svg class="h-4 w-4 shrink-0 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <app-status-badge status="acc-release" />
+            <svg class="h-4 w-4 shrink-0 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <app-status-badge status="acc-done" />
+          </div>
+
+          <!-- ACC loop indicator -->
+          <div class="flex items-center gap-1 rounded-lg border border-dashed border-blue-300 bg-blue-50/50 px-2 py-1">
+            <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span class="text-xs text-blue-600 font-medium">repeat</span>
+          </div>
+
+          <svg class="h-5 w-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+
+          <!-- PRD -->
+          <div class="flex items-center gap-2">
+            <span class="rounded-md border border-orange-200 bg-orange-50 px-2 py-0.5 text-xs font-bold text-orange-700">PRD</span>
+            <app-status-badge status="prd-setup" />
+            <svg class="h-4 w-4 shrink-0 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <app-status-badge status="prd-review" />
+            <svg class="h-4 w-4 shrink-0 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <app-status-badge status="prd-release" />
+            <svg class="h-4 w-4 shrink-0 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <app-status-badge status="prd-done" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Phase details ─────────────────────────────────── -->
+
+    <!-- TST Phase -->
+    <section class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-xs font-bold text-slate-600">TST</span>
+        <h2 class="text-lg font-semibold text-gray-900">Test &mdash; Development Phase</h2>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <!-- Status: Development -->
+        <div class="border-b border-gray-100 p-5">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 pt-0.5">
+              <app-status-badge status="development" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-1">Development</h3>
+              <p class="text-xs text-gray-600 mb-3">
+                The <span class="font-medium text-gray-800">develop</span> branch holds all development for the next ACC release.
+                During this period developers should be creating, merging and reviewing PRs to develop.
+              </p>
+              <div class="rounded-lg bg-gray-50 border border-gray-200 p-3">
+                <p class="text-xs font-semibold text-gray-700 mb-2">What to do:</p>
+                <ul class="space-y-1 text-xs text-gray-600">
+                  <li class="flex items-start gap-2">
+                    <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400"></span>
+                    Create feature branches from <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">develop</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400"></span>
+                    Open PRs targeting <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">develop</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400"></span>
+                    Review and merge PRs before the deadline
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-3 flex items-center gap-2 rounded-lg bg-amber-50 border border-amber-200 p-2.5">
+                <svg class="h-4 w-4 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                <p class="text-xs text-amber-800">
+                  <span class="font-semibold">Deadline:</span> 12:00 on the first ACC release day.
+                  All PRs must be merged to develop before this time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Duration -->
+        <div class="bg-slate-50 px-5 py-3">
+          <p class="text-xs text-slate-600">
+            <span class="font-semibold">Duration:</span> From the first TST date (e.g. 26/03) until 12:00 on the first ACC release day.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACC Phase -->
+    <section class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="rounded-md border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-bold text-blue-700">ACC</span>
+        <h2 class="text-lg font-semibold text-gray-900">Acceptance &mdash; Release to ACC</h2>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <!-- Status: Setup ACC -->
+        <div class="border-b border-gray-100 p-5">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 pt-0.5">
+              <app-status-badge status="acc-setup" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-1">Setup ACC</h3>
+              <p class="text-xs text-gray-600 mb-1">
+                At <span class="font-semibold text-gray-800">12:00</span> on the ACC release day, the ACC setup begins.
+              </p>
+              <div class="rounded-lg bg-gray-50 border border-gray-200 p-3">
+                <p class="text-xs font-semibold text-gray-700 mb-2">Steps:</p>
+                <ol class="space-y-1.5 text-xs text-gray-600 list-none">
+                  <li class="flex items-start gap-2">
+                    <span class="shrink-0 flex h-4 w-4 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold">1</span>
+                    Revert all commits on Jira that are <span class="font-semibold">not</span> part of this ACC release on develop
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="shrink-0 flex h-4 w-4 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold">2</span>
+                    Branch off from <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">develop</span> &rarr;
+                    <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">release/xx.xx.x</span>
+                    (e.g. <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">release/26.04.0</span>)
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="shrink-0 flex h-4 w-4 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold">3</span>
+                    Create a PR from <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">release/xx.xx.x</span> &rarr;
+                    <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">develop</span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status: ACC Review -->
+        <div class="border-b border-gray-100 p-5">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 pt-0.5">
+              <app-status-badge status="acc-review" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-1">ACC Review</h3>
+              <p class="text-xs text-gray-600 mb-3">
+                From <span class="font-semibold text-gray-800">12:15</span> to <span class="font-semibold text-gray-800">16:00</span>,
+                the release PR must be reviewed and approved.
+              </p>
+              <div class="flex items-center gap-2 rounded-lg bg-blue-50 border border-blue-200 p-2.5">
+                <svg class="h-4 w-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-xs text-blue-800">
+                  Since features were already reviewed on develop during TST, this review should be quick &mdash; focus on the release scope and any revert correctness.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status: To Release in ACC -->
+        <div class="border-b border-gray-100 p-5">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 pt-0.5">
+              <app-status-badge status="acc-release" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-1">To Release in ACC</h3>
+              <p class="text-xs text-gray-600">
+                After PR approval, the deployment happens at the scheduled time on the ACC release day (e.g. <span class="font-semibold text-gray-800">17:00</span>).
+                The exact time can vary per release.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status: ACC Done -->
+        <div class="border-b border-gray-100 p-5">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 pt-0.5">
+              <app-status-badge status="acc-done" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-1">ACC Done</h3>
+              <p class="text-xs text-gray-600">
+                After a successful deploy, the PR is approved and merged.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACC Repeat callout -->
+        <div class="bg-blue-50 border-t border-blue-100 px-5 py-4">
+          <div class="flex items-start gap-3">
+            <svg class="h-5 w-5 shrink-0 text-blue-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <div>
+              <p class="text-xs font-semibold text-blue-900 mb-1">ACC can repeat multiple times</p>
+              <p class="text-xs text-blue-800">
+                There can be multiple ACC release moments for the same release version.
+                Each round goes through <span class="font-medium">Setup ACC &rarr; ACC Review &rarr; To Release in ACC &rarr; ACC Done</span>.
+                Only the <span class="font-semibold">last ACC round</span> is used to deploy to PRD and merge into main.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRD Phase -->
+    <section class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="rounded-md border border-orange-200 bg-orange-50 px-2.5 py-0.5 text-xs font-bold text-orange-700">PRD</span>
+        <h2 class="text-lg font-semibold text-gray-900">Production &mdash; Release to PRD</h2>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <!-- Status: Setup PRD -->
+        <div class="border-b border-gray-100 p-5">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 pt-0.5">
+              <app-status-badge status="prd-setup" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-1">Setup PRD</h3>
+              <p class="text-xs text-gray-600 mb-1">
+                On the <span class="font-semibold text-gray-800">Friday before the PRD release week</span>, the production setup begins.
+              </p>
+              <div class="rounded-lg bg-gray-50 border border-gray-200 p-3">
+                <p class="text-xs font-semibold text-gray-700 mb-2">Steps:</p>
+                <ol class="space-y-1.5 text-xs text-gray-600 list-none">
+                  <li class="flex items-start gap-2">
+                    <span class="shrink-0 flex h-4 w-4 items-center justify-center rounded-full bg-teal-100 text-teal-700 text-[10px] font-bold">1</span>
+                    Create PR from <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">release/xx.xx.x</span> &rarr;
+                    <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">develop</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="shrink-0 flex h-4 w-4 items-center justify-center rounded-full bg-teal-100 text-teal-700 text-[10px] font-bold">2</span>
+                    Create PR from <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">release/xx.xx.x</span> &rarr;
+                    <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">main</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="shrink-0 flex h-4 w-4 items-center justify-center rounded-full bg-teal-100 text-teal-700 text-[10px] font-bold">3</span>
+                    Create a Jira ticket with the infra team for the PRD deployment
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status: PRD Review -->
+        <div class="border-b border-gray-100 p-5">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 pt-0.5">
+              <app-status-badge status="prd-review" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-1">PRD Review</h3>
+              <p class="text-xs text-gray-600">
+                The PRs must be reviewed and approved during the period from the <span class="font-semibold text-gray-800">Friday before PRD</span>
+                until before the <span class="font-semibold text-gray-800">PRD deploy moment</span>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status: To Release in PRD -->
+        <div class="border-b border-gray-100 p-5">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 pt-0.5">
+              <app-status-badge status="prd-release" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-1">To Release in PRD</h3>
+              <p class="text-xs text-gray-600">
+                The deploy happens at the agreed-upon moment. The date and time are variable per release.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status: Completed -->
+        <div class="border-b border-gray-100 p-5">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 pt-0.5">
+              <app-status-badge status="prd-done" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-1">Completed</h3>
+              <p class="text-xs text-gray-600">
+                After a successful deploy, the PRs are merged into both
+                <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">main</span> and
+                <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">develop</span>.
+                The release is done.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-orange-50 border-t border-orange-100 px-5 py-3">
+          <p class="text-xs text-orange-800">
+            <span class="font-semibold">Note:</span> Only the last ACC release branch is used for the PRD deployment and merge into main.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Status bridge table ───────────────────────────── -->
+    <section class="mb-10">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Bridging Statuses Across Environments</h2>
+      <p class="text-sm text-gray-600 mb-4 max-w-3xl">
+        The same concepts apply in both ACC and PRD, but at different scales.
+        This table maps equivalent phases across environments so you can always understand where you are in the process.
+      </p>
+
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <table class="w-full text-xs">
+          <thead>
+            <tr class="bg-gray-50 border-b border-gray-200">
+              <th class="px-4 py-3 text-left font-semibold text-gray-700">Phase</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700">
+                <span class="rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-slate-600">TST</span>
+              </th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700">
+                <span class="rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-blue-700">ACC</span>
+              </th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700">
+                <span class="rounded-md border border-orange-200 bg-orange-50 px-2 py-0.5 text-orange-700">PRD</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-700">Preparation</td>
+              <td class="px-4 py-3 text-gray-600">Merge PRs to develop</td>
+              <td class="px-4 py-3"><app-status-badge status="acc-setup" /></td>
+              <td class="px-4 py-3"><app-status-badge status="prd-setup" /></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-700">Review</td>
+              <td class="px-4 py-3 text-gray-600">PR reviews on develop</td>
+              <td class="px-4 py-3"><app-status-badge status="acc-review" /></td>
+              <td class="px-4 py-3"><app-status-badge status="prd-review" /></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-700">Deploy</td>
+              <td class="px-4 py-3 text-gray-600">&mdash;</td>
+              <td class="px-4 py-3"><app-status-badge status="acc-release" /></td>
+              <td class="px-4 py-3"><app-status-badge status="prd-release" /></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-700">Done</td>
+              <td class="px-4 py-3 text-gray-600">&mdash;</td>
+              <td class="px-4 py-3"><app-status-badge status="acc-done" /></td>
+              <td class="px-4 py-3"><app-status-badge status="prd-done" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Timeline example ──────────────────────────────── -->
+    <section class="mb-10">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Example Timeline</h2>
+      <p class="text-sm text-gray-600 mb-4 max-w-3xl">
+        Here's what a typical release cycle looks like for <span class="font-mono text-gray-800 bg-gray-100 px-1 rounded">release/26.04.0</span>
+        with two ACC rounds.
+      </p>
+
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="divide-y divide-gray-100">
+          <!-- TST -->
+          <div class="flex items-start gap-4 p-4">
+            <div class="shrink-0 w-28 text-right">
+              <p class="text-xs font-semibold text-gray-800">26/03</p>
+              <p class="text-[10px] text-gray-500">TST start</p>
+            </div>
+            <div class="relative flex flex-col items-center">
+              <div class="h-3 w-3 rounded-full bg-slate-400 ring-4 ring-slate-100"></div>
+              <div class="w-0.5 flex-1 bg-gray-200"></div>
+            </div>
+            <div>
+              <app-status-badge status="development" />
+              <p class="mt-1 text-xs text-gray-600">Developers merge PRs to develop</p>
+            </div>
+          </div>
+
+          <!-- ACC Round 1 -->
+          <div class="flex items-start gap-4 p-4">
+            <div class="shrink-0 w-28 text-right">
+              <p class="text-xs font-semibold text-gray-800">01/04 &middot; 12:00</p>
+              <p class="text-[10px] text-gray-500">ACC round 1</p>
+            </div>
+            <div class="relative flex flex-col items-center">
+              <div class="h-3 w-3 rounded-full bg-blue-500 ring-4 ring-blue-100"></div>
+              <div class="w-0.5 flex-1 bg-gray-200"></div>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <app-status-badge status="acc-setup" />
+                <svg class="h-3 w-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <app-status-badge status="acc-review" />
+                <svg class="h-3 w-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <app-status-badge status="acc-release" />
+                <svg class="h-3 w-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <app-status-badge status="acc-done" />
+              </div>
+              <p class="mt-1 text-xs text-gray-600">Setup at 12:00, review 12:15&ndash;16:00, deploy at 17:00</p>
+            </div>
+          </div>
+
+          <!-- ACC Round 2 -->
+          <div class="flex items-start gap-4 p-4">
+            <div class="shrink-0 w-28 text-right">
+              <p class="text-xs font-semibold text-gray-800">09/04 &middot; 12:00</p>
+              <p class="text-[10px] text-gray-500">ACC round 2</p>
+            </div>
+            <div class="relative flex flex-col items-center">
+              <div class="h-3 w-3 rounded-full bg-blue-500 ring-4 ring-blue-100"></div>
+              <div class="w-0.5 flex-1 bg-gray-200"></div>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <app-status-badge status="acc-setup" />
+                <svg class="h-3 w-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <app-status-badge status="acc-review" />
+                <svg class="h-3 w-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <app-status-badge status="acc-release" />
+                <svg class="h-3 w-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <app-status-badge status="acc-done" />
+              </div>
+              <p class="mt-1 text-xs text-gray-600">Last ACC round &mdash; this branch goes to PRD</p>
+            </div>
+          </div>
+
+          <!-- PRD Setup -->
+          <div class="flex items-start gap-4 p-4">
+            <div class="shrink-0 w-28 text-right">
+              <p class="text-xs font-semibold text-gray-800">11/04 (Fri)</p>
+              <p class="text-[10px] text-gray-500">PRD setup</p>
+            </div>
+            <div class="relative flex flex-col items-center">
+              <div class="h-3 w-3 rounded-full bg-orange-500 ring-4 ring-orange-100"></div>
+              <div class="w-0.5 flex-1 bg-gray-200"></div>
+            </div>
+            <div>
+              <app-status-badge status="prd-setup" />
+              <p class="mt-1 text-xs text-gray-600">Create PRs to main &amp; develop, Jira ticket with infra</p>
+            </div>
+          </div>
+
+          <!-- PRD Deploy -->
+          <div class="flex items-start gap-4 p-4">
+            <div class="shrink-0 w-28 text-right">
+              <p class="text-xs font-semibold text-gray-800">16/04</p>
+              <p class="text-[10px] text-gray-500">PRD deploy</p>
+            </div>
+            <div class="relative flex flex-col items-center">
+              <div class="h-3 w-3 rounded-full bg-orange-500 ring-4 ring-orange-100"></div>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <app-status-badge status="prd-release" />
+                <svg class="h-3 w-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <app-status-badge status="prd-done" />
+              </div>
+              <p class="mt-1 text-xs text-gray-600">Deploy, merge PRs into main &amp; develop</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Quick reference ───────────────────────────────── -->
+    <section class="mb-10">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Reference</h2>
+
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <!-- Key branches -->
+        <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h3 class="text-sm font-semibold text-gray-900 mb-3">Key Branches</h3>
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center gap-3">
+              <span class="font-mono rounded bg-gray-100 px-2 py-0.5 text-gray-800 font-medium">main</span>
+              <span class="text-gray-600">Production code &mdash; always matches what's deployed in PRD</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="font-mono rounded bg-gray-100 px-2 py-0.5 text-gray-800 font-medium">develop</span>
+              <span class="text-gray-600">Integration branch &mdash; holds development for the next ACC release</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="font-mono rounded bg-gray-100 px-2 py-0.5 text-gray-800 font-medium">release/xx.xx.x</span>
+              <span class="text-gray-600">Release branch &mdash; cut from develop at ACC setup time</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="font-mono rounded bg-gray-100 px-2 py-0.5 text-gray-800 font-medium">feature/*</span>
+              <span class="text-gray-600">Feature branches &mdash; created by developers, merged to develop</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key times -->
+        <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h3 class="text-sm font-semibold text-gray-900 mb-3">Key Times on ACC Day</h3>
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center gap-3">
+              <span class="rounded bg-amber-100 px-2 py-0.5 font-semibold text-amber-700 font-mono">12:00</span>
+              <span class="text-gray-600">Development deadline &mdash; ACC setup starts</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="rounded bg-blue-100 px-2 py-0.5 font-semibold text-blue-700 font-mono">12:15</span>
+              <span class="text-gray-600">Review period opens</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="rounded bg-blue-100 px-2 py-0.5 font-semibold text-blue-700 font-mono">16:00</span>
+              <span class="text-gray-600">Review period closes</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="rounded bg-indigo-100 px-2 py-0.5 font-semibold text-indigo-700 font-mono">17:00*</span>
+              <span class="text-gray-600">ACC deploy (time varies per release)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>

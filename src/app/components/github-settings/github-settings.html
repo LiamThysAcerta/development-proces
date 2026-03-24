@@ -1,0 +1,148 @@
+<!-- Backdrop -->
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+  (click)="close.emit()"
+>
+  <!-- Modal -->
+  <div class="w-full max-w-md rounded-xl bg-white shadow-2xl" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+      <div class="flex items-center gap-2">
+        <svg class="h-5 w-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+          />
+        </svg>
+        <h2 class="text-sm font-semibold text-gray-900">GitHub Storage Settings</h2>
+      </div>
+      <button
+        (click)="close.emit()"
+        class="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="space-y-4 px-5 py-5">
+      <!-- Info note -->
+      <div class="rounded-lg border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800">
+        Releases are stored in <code class="font-mono font-semibold">public/releases.json</code> in
+        your repo. Changes are committed via the GitHub API — no backend needed.<br />
+        Use a <strong>fine-grained PAT</strong> scoped to <em>Contents: Read &amp; Write</em> on
+        this repo only.
+      </div>
+
+      <!-- Owner -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">GitHub Owner</label>
+        <input
+          [(ngModel)]="form.owner"
+          name="owner"
+          type="text"
+          placeholder="your-username or org-name"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- Repo -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">Repository name</label>
+        <input
+          [(ngModel)]="form.repo"
+          name="repo"
+          type="text"
+          placeholder="development-proces"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- Branch -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">Branch</label>
+        <input
+          [(ngModel)]="form.branch"
+          name="branch"
+          type="text"
+          placeholder="main"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- PAT -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">
+          Personal Access Token (fine-grained)
+        </label>
+        <input
+          [(ngModel)]="form.pat"
+          name="pat"
+          type="password"
+          placeholder="github_pat_..."
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+        <p class="mt-1 text-xs text-gray-400">
+          Stored in localStorage, never sent anywhere except api.github.com.
+        </p>
+      </div>
+
+      <!-- Test result -->
+      @if (testStatus() === 'ok') {
+        <div
+          class="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700"
+        >
+          <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          Connection successful — releases.json found.
+        </div>
+      }
+      @if (testStatus() === 'error') {
+        <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+          <p class="font-medium">Connection failed</p>
+          <p class="mt-0.5 font-mono">{{ testError() }}</p>
+        </div>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-between border-t border-gray-200 px-5 py-4">
+      <button (click)="clear()" class="text-xs text-gray-400 hover:text-red-600 transition-colors">
+        Clear config
+      </button>
+
+      <div class="flex items-center gap-2">
+        <button
+          (click)="test()"
+          [disabled]="!isValid || testStatus() === 'testing'"
+          class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          @if (testStatus() === 'testing') {
+            Testing…
+          } @else {
+            Test connection
+          }
+        </button>
+        <button
+          (click)="save()"
+          [disabled]="!isValid"
+          class="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,370 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- ── Header ────────────────────────────────────────────── -->
+  <header class="sticky top-0 z-20 border-b border-gray-200 bg-white shadow-sm">
+    <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+      <div class="py-3">
+        <div class="flex items-center gap-3">
+          <!-- Brand -->
+          <div class="flex flex-1 items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+              <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-bold leading-tight text-gray-900">Release Tracker</p>
+              <p class="text-xs text-gray-500">TST &rarr; ACC &rarr; PRD</p>
+            </div>
+          </div>
+
+          <div class="flex justify-center">
+            <app-stats-row
+              [total]="totalCount()"
+              [active]="activeCount()"
+              [pendingPRs]="pendingPRs()"
+            ></app-stats-row>
+          </div>
+
+          <div class="ml-auto flex flex-1 items-center justify-end gap-2">
+            <!-- View toggle -->
+            <div class="flex items-center gap-1 rounded-lg bg-gray-100 p-1">
+              <button
+                (click)="setView('kanban')"
+                [class]="
+                  view() === 'kanban'
+                    ? 'bg-white text-gray-900 shadow'
+                    : 'text-gray-500 hover:text-gray-700'
+                "
+                class="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"
+                  />
+                </svg>
+                Kanban
+              </button>
+              <button
+                (click)="setView('timeline')"
+                [class]="
+                  view() === 'timeline'
+                    ? 'bg-white text-gray-900 shadow'
+                    : 'text-gray-500 hover:text-gray-700'
+                "
+                class="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Timeline
+              </button>
+            </div>
+
+            <!-- Guide link -->
+            <a
+              routerLink="/guide"
+              class="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                />
+              </svg>
+              Guide
+            </a>
+
+            <!-- Save status indicator -->
+            @if (saveStatus() === 'saving') {
+              <span class="flex items-center gap-1.5 text-xs text-gray-400">
+                <svg
+                  class="h-3.5 w-3.5 animate-spin"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                Saving…
+              </span>
+            }
+            @if (saveStatus() === 'saved') {
+              <span class="flex items-center gap-1 text-xs text-emerald-600">
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Saved
+              </span>
+            }
+            @if (saveStatus() === 'error') {
+              <span class="flex items-center gap-1 text-xs text-red-500">
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01M12 3a9 9 0 110 18A9 9 0 0112 3z"
+                  />
+                </svg>
+                Save failed
+              </span>
+            }
+
+            <!-- Settings button -->
+            <button
+              (click)="showSettingsModal.set(true)"
+              title="GitHub storage settings"
+              class="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              Storage
+            </button>
+
+            <!-- Add Release button -->
+            <button
+              (click)="showAddModal.set(true)"
+              class="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              New Release
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main content ───────────────────────────────────────── -->
+  <main class="mx-auto max-w-screen-2xl px-4 py-6 sm:px-6 lg:px-8">
+    <!-- Body: top info panels + main view -->
+    <div class="space-y-6">
+      <div
+        [class]="
+          accDayReference()
+            ? 'grid grid-cols-1 gap-5 xl:grid-cols-2'
+            : 'grid grid-cols-1 gap-5 xl:grid-cols-1'
+        "
+      >
+        <!-- Next actions -->
+        <div class="rounded-xl border bg-white p-4 shadow-sm">
+          <h3 class="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-900">
+            <svg
+              class="h-4 w-4 text-orange-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Next Actions
+          </h3>
+
+          @if (nextActions().length === 0) {
+            <p class="text-sm text-gray-400">No upcoming actions.</p>
+          }
+
+          @if (nextActions().length > 0) {
+            <div class="mb-3 last:mb-0">
+              <div
+                [class]="
+                  'rounded-lg border p-3 ' +
+                  (nextActions()[0].urgent
+                    ? 'border-red-200 bg-red-50'
+                    : 'border-gray-200 bg-gray-50')
+                "
+              >
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0">
+                    <p class="truncate text-xs font-medium text-gray-800">
+                      {{ nextActions()[0].action }}
+                    </p>
+                    <p class="mt-0.5 text-xs text-gray-500">
+                      {{ nextActions()[0].dueDate | date: 'EEE, MMM d, HH:mm' }}
+                    </p>
+                  </div>
+                  @if (nextActions()[0].urgent) {
+                    <span
+                      class="shrink-0 rounded bg-red-100 px-1.5 py-0.5 text-xs font-semibold text-red-700"
+                    >
+                      URGENT
+                    </span>
+                  }
+                </div>
+                <div class="mt-2">
+                  <app-countdown-timer
+                    [targetDate]="nextActions()[0].dueDate"
+                    [label]="nextActions()[0].release.version"
+                  />
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (accDayReference()) {
+          <!-- ACC day flow -->
+          <div class="rounded-xl border bg-white p-4 shadow-sm">
+            <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900">
+              <svg
+                class="h-4 w-4 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
+              </svg>
+              ACC Day Flow
+            </h3>
+
+            <div class="space-y-2.5 text-xs">
+              <div class="rounded-lg border border-blue-100 bg-blue-50 p-2.5">
+                <p class="font-medium text-gray-800">{{ accDayReference()!.release.version }}</p>
+                <p class="text-gray-500">
+                  ACC release day: {{ accDayReference()!.accDay | date: 'EEE, MMM d, yyyy' }}
+                </p>
+              </div>
+
+              @for (step of accDayReference()!.steps; track step.title) {
+                <div class="rounded-lg border border-gray-200 bg-gray-50 p-2.5">
+                  <div class="flex items-start gap-2">
+                    <span
+                      class="mt-0.5 inline-flex min-w-16 justify-center rounded bg-blue-100 px-1.5 py-0.5 font-semibold text-blue-700"
+                    >
+                      {{ step.time }}
+                    </span>
+                    <div>
+                      <p class="font-medium text-gray-800">{{ step.title }}</p>
+                      <p class="text-gray-500">{{ step.detail }}</p>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- ── Kanban / Timeline ─── -->
+      <div>
+        @if (view() === 'kanban') {
+          <div class="space-y-6">
+            @for (group of columnGroups(); track group.env) {
+              <!-- Environment group -->
+              <div>
+                <div class="mb-3 flex items-center gap-2">
+                  <span
+                    [class]="'rounded-md border px-2.5 py-0.5 text-xs font-bold ' + group.envCls"
+                  >
+                    {{ group.env }}
+                  </span>
+                  <div class="flex-1 border-t border-gray-200"></div>
+                </div>
+                <div class="flex gap-4">
+                  @for (col of group.columns; track col.id) {
+                    <div class="flex-1 min-w-0">
+                      <!-- Column header -->
+                      <div class="mb-3 flex items-center gap-2">
+                        <span class="h-2.5 w-2.5 rounded-full" [class]="col.dotCls"></span>
+                        <h3 class="text-sm font-semibold text-gray-700">{{ col.title }}</h3>
+                        <span
+                          class="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600"
+                        >
+                          {{ col.releases.length }}
+                        </span>
+                      </div>
+                      <!-- Cards -->
+                      <div class="space-y-3 min-h-16">
+                        @for (release of col.releases; track release.id) {
+                          <app-release-card
+                            class="block"
+                            [release]="release"
+                            (prStatusChange)="onPRChange($event)"
+                            (statusChange)="onStatusChange($event)"
+                            (accDeploymentAdd)="onAddAccDeployment($event)"
+                            (deleteRelease)="onDeleteRelease($event)"
+                          />
+                        }
+                        @if (col.releases.length === 0) {
+                          <div
+                            class="rounded-xl border-2 border-dashed border-gray-200 p-6 text-center text-sm text-gray-400"
+                          >
+                            Empty
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <app-timeline-view />
+        }
+      </div>
+    </div>
+  </main>
+</div>
+
+@if (showAddModal()) {
+  <app-add-release-modal (save)="onAddRelease($event)" (cancel)="showAddModal.set(false)" />
+}
+
+@if (showSettingsModal()) {
+  <app-github-settings (close)="showSettingsModal.set(false)" />
+}

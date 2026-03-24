@@ -1,0 +1,118 @@
+[
+  {
+    "id": "rel-mrt",
+    "version": "release/26.03.0",
+    "branchName": "release/2026-03",
+    "status": "prd-done",
+    "firstTstDeployDate": "2026-02-20",
+    "currentAccRound": 2,
+    "description": "Content 06/02/2026 | TST 20/02/2026",
+    "team": ["Release Team"],
+    "repositoryUrl": "https://github.com/org/repo",
+    "prdDeployDate": "2026-03-19",
+    "prdSetupDate": "2026-03-13",
+    "accDeployments": [
+      { "id": "rel-mrt-acc-1", "date": "2026-02-24" },
+      { "id": "rel-mrt-acc-2", "date": "2026-03-12", "notes": "Final ACC round" }
+    ],
+    "phases": [
+      {
+        "id": "rel-mrt-tst-phase",
+        "name": "TST Development",
+        "environment": "TST",
+        "startDate": "2026-02-20",
+        "endDate": "2026-02-24",
+        "completed": true
+      },
+      {
+        "id": "rel-mrt-acc-phase",
+        "name": "ACC Testing",
+        "environment": "ACC",
+        "startDate": "2026-02-24",
+        "endDate": "2026-03-12",
+        "completed": true
+      },
+      {
+        "id": "rel-mrt-prd-phase",
+        "name": "PRD Deployment",
+        "environment": "PRD",
+        "startDate": "2026-03-13",
+        "endDate": "2026-03-19",
+        "completed": true
+      }
+    ],
+    "prs": [
+      {
+        "id": "rel-mrt-pr",
+        "title": "Release checklist release/26.03.0",
+        "number": 500,
+        "url": "https://github.com/org/repo/pull/500",
+        "status": "merged",
+        "targetBranch": "main",
+        "sourceBranch": "release/rel-mrt",
+        "author": "Release Bot",
+        "reviewers": ["Team Lead"],
+        "createdAt": "2026-02-20",
+        "updatedAt": "2026-02-20"
+      }
+    ]
+  },
+  {
+    "id": "rel-apr",
+    "version": "26.04.0",
+    "branchName": "release/2026-04",
+    "status": "development",
+    "firstTstDeployDate": "2026-03-26",
+    "currentAccRound": 1,
+    "description": "Content 06/03/2026 | TST 26/03/2026",
+    "team": ["Release Team"],
+    "repositoryUrl": "https://github.com/org/repo",
+    "prdDeployDate": "2026-04-16",
+    "prdSetupDate": "2026-04-10",
+    "accDeployments": [
+      { "id": "rel-apr-acc-1", "date": "2026-04-01" },
+      { "id": "rel-apr-acc-2", "date": "2026-04-09", "notes": "Final ACC round" }
+    ],
+    "phases": [
+      {
+        "id": "rel-apr-tst-phase",
+        "name": "TST Development",
+        "environment": "TST",
+        "startDate": "2026-03-26",
+        "endDate": "2026-04-01",
+        "completed": false
+      },
+      {
+        "id": "rel-apr-acc-phase",
+        "name": "ACC Testing",
+        "environment": "ACC",
+        "startDate": "2026-04-01",
+        "endDate": "2026-04-09",
+        "completed": false
+      },
+      {
+        "id": "rel-apr-prd-phase",
+        "name": "PRD Deployment",
+        "environment": "PRD",
+        "startDate": "2026-04-10",
+        "endDate": "2026-04-16",
+        "completed": false
+      }
+    ],
+    "prs": [
+      {
+        "id": "rel-apr-pr",
+        "title": "Release checklist 26.04.0",
+        "number": 501,
+        "url": "https://github.com/org/repo/pull/501",
+        "status": "draft",
+        "targetBranch": "main",
+        "sourceBranch": "release/rel-apr",
+        "author": "Release Bot",
+        "reviewers": ["Team Lead"],
+        "createdAt": "2026-03-26",
+        "updatedAt": "2026-03-26"
+      }
+    ]
+  }
+]

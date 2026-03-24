@@ -1,0 +1,218 @@
+<!-- Backdrop -->
+<div class="fixed inset-0 z-30 flex items-center justify-center bg-black/40 p-4">
+  <!-- Modal -->
+  <div class="w-full max-w-lg rounded-2xl bg-white shadow-xl">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b px-6 py-4">
+      <h2 class="text-base font-semibold text-gray-900">New Release</h2>
+      <button
+        (click)="cancel.emit()"
+        class="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" #f="ngForm" class="px-6 py-5 space-y-4">
+      <!-- Version & Branch -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="mb-1 block text-xs font-medium text-gray-700"
+            >Version <span class="text-red-500">*</span></label
+          >
+          <input
+            name="version"
+            [(ngModel)]="form.version"
+            (blur)="onVersionChange()"
+            required
+            placeholder="v2.8.0"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-xs font-medium text-gray-700"
+            >Branch Name <span class="text-red-500">*</span></label
+          >
+          <input
+            name="branchName"
+            [(ngModel)]="form.branchName"
+            required
+            placeholder="release/2.8.0"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">Description</label>
+        <input
+          name="description"
+          [(ngModel)]="form.description"
+          placeholder="Short description of this release"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- Team -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">Team Members</label>
+        <input
+          name="team"
+          [(ngModel)]="form.team"
+          placeholder="Alice, Bob, Carol"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+        <p class="mt-1 text-xs text-gray-400">Comma-separated names</p>
+      </div>
+
+      <!-- ACC Deployments -->
+      <div>
+        <div class="mb-1.5 flex items-center justify-between">
+          <label class="text-xs font-medium text-gray-700"
+            >ACC Deployments <span class="text-red-500">*</span></label
+          >
+          <button
+            type="button"
+            (click)="addAccRound()"
+            class="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700"
+          >
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add round
+          </button>
+        </div>
+        <div class="space-y-2">
+          @for (acc of accDates; track $index; let i = $index; let last = $last) {
+            <div class="flex items-center gap-2">
+              <span
+                class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+                [class]="
+                  last && accDates.length > 1
+                    ? 'bg-indigo-100 text-indigo-700'
+                    : 'bg-blue-100 text-blue-700'
+                "
+              >
+                {{ i + 1 }}
+              </span>
+              <input
+                type="date"
+                [name]="'accDate-' + i"
+                [(ngModel)]="accDates[i]"
+                class="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+              @if (last && accDates.length > 1) {
+                <span
+                  class="shrink-0 rounded bg-indigo-100 px-1.5 py-0.5 text-xs font-semibold text-indigo-700"
+                  >Final</span
+                >
+              }
+              @if (accDates.length > 1) {
+                <button
+                  type="button"
+                  (click)="removeAccRound(i)"
+                  class="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                >
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- First TST Deploy Date -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700"
+          >First TST Deploy Date <span class="text-red-500">*</span></label
+        >
+        <input
+          name="firstTstDeployDate"
+          type="date"
+          [(ngModel)]="form.firstTstDeployDate"
+          required
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- PRD Deploy Date -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700"
+          >PRD Deploy Date <span class="text-red-500">*</span></label
+        >
+        <input
+          name="prdDeployDate"
+          type="date"
+          [(ngModel)]="form.prdDeployDate"
+          (blur)="onPrdDateChange()"
+          required
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- PRD Setup Date -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">PRD Setup Date</label>
+        <input
+          name="prdSetupDate"
+          type="date"
+          [(ngModel)]="form.prdSetupDate"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+        <p class="mt-1 text-xs text-gray-400">
+          Friday before PRD week. Auto-calculated from PRD date if left empty.
+        </p>
+      </div>
+
+      <!-- Repository URL -->
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">Repository URL</label>
+        <input
+          name="repositoryUrl"
+          [(ngModel)]="form.repositoryUrl"
+          placeholder="https://github.com/org/repo"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 pt-2">
+        <button
+          type="button"
+          (click)="cancel.emit()"
+          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="!canSubmit"
+          class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Add Release
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
