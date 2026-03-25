@@ -16,7 +16,9 @@ interface AccDot {
 interface ReleaseBar {
   release: Release;
   accDots: AccDot[];
+  tstPct: number;
   firstAccPct: number;
+  devWidthPct: number;
   widthPct: number;
   prdPct: number;
   colorCls: string;
@@ -60,7 +62,11 @@ export class TimelineViewComponent {
       return { start: now, end, ms: end.getTime() - now.getTime() };
     }
     const allDates = rs
-      .flatMap((r) => [...r.accDeployments.map((a) => a.date), r.prdDeployDate])
+      .flatMap((r) => [
+        r.firstTstDeployDate,
+        ...r.accDeployments.map((a) => a.date),
+        r.prdDeployDate,
+      ])
       .map((d) => d.getTime());
     const startMs = Math.min(...allDates) - 7 * 86400000;
     const endMs = Math.max(...allDates) + 7 * 86400000;
@@ -93,6 +99,7 @@ export class TimelineViewComponent {
   bars = computed<ReleaseBar[]>(() =>
     this.upcoming().map((release) => {
       const accs = release.accDeployments;
+      const tstPct = this.pct(release.firstTstDeployDate);
       const firstAccPct = accs.length ? this.pct(accs[0].date) : this.pct(release.prdDeployDate);
       const accDots: AccDot[] = accs.map((a, i) => ({
         pct: this.pct(a.date),
@@ -106,7 +113,9 @@ export class TimelineViewComponent {
       return {
         release,
         accDots,
+        tstPct,
         firstAccPct,
+        devWidthPct: Math.max(2, firstAccPct - tstPct),
         widthPct: Math.max(2, this.pct(release.prdDeployDate) - firstAccPct),
         prdPct: this.pct(release.prdDeployDate),
         colorCls: STATUS_BAR_COLOR[release.status] ?? 'bg-gray-400',

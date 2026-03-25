@@ -12,14 +12,17 @@
     </div>
 
     <!-- Grid + bars -->
-    <div class="relative border-t border-gray-100" style="min-height: 16rem;">
+    <div class="relative border-t border-gray-100" style="min-height: 16rem">
       <!-- Grid lines -->
       @for (m of months(); track m.label) {
         <div class="absolute top-0 h-full w-px bg-gray-100" [style.left.%]="m.pct"></div>
       }
 
       <!-- Today marker -->
-      <div class="absolute top-0 z-10 h-full border-l-2 border-dashed border-red-400" [style.left.%]="todayPct()">
+      <div
+        class="absolute top-0 z-10 h-full border-l-2 border-dashed border-red-400"
+        [style.left.%]="todayPct()"
+      >
         <span class="absolute -top-5 left-1 text-xs font-medium text-red-500">Today</span>
       </div>
 
@@ -28,49 +31,86 @@
         @for (bar of bars(); track bar.release.id) {
           <div class="relative flex h-8 items-center">
             <!-- Version label on the left -->
-            <div class="absolute -left-1 -translate-x-full pr-2 text-right text-xs font-semibold text-gray-700"
-                 style="width: 3rem;">
+            <div
+              class="absolute -left-1 -translate-x-full pr-2 text-right text-xs font-semibold text-gray-700"
+              style="width: 3rem"
+            >
               {{ bar.release.version }}
             </div>
 
             <!-- ACC-to-PRD bar -->
-            <div class="absolute h-7 rounded-lg bg-blue-200 opacity-80"
-                 [style.left.%]="bar.firstAccPct"
-                 [style.width.%]="bar.widthPct"
-                 [title]="'ACC → PRD ' + (bar.release.prdDeployDate | date:'MMM d')">
-            </div>
+            <div
+              class="absolute h-7 rounded-lg bg-blue-200 opacity-80"
+              [style.left.%]="bar.firstAccPct"
+              [style.width.%]="bar.widthPct"
+              [title]="'ACC → PRD ' + (bar.release.prdDeployDate | date: 'MMM d')"
+            ></div>
+
+            <!-- TST-to-ACC development bar -->
+            <div
+              class="absolute h-7 rounded-lg bg-slate-200 opacity-90"
+              [style.left.%]="bar.tstPct"
+              [style.width.%]="bar.devWidthPct"
+              [title]="
+                'Development: ' +
+                (bar.release.firstTstDeployDate | date: 'MMM d') +
+                ' → ' +
+                (bar.release.accDeployments[0].date | date: 'MMM d')
+              "
+            ></div>
+
+            <!-- First TST deploy dot -->
+            <div
+              class="absolute z-10 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full bg-slate-500 ring-2 ring-white"
+              [style.left.%]="bar.tstPct"
+              [title]="'First TST: ' + (bar.release.firstTstDeployDate | date: 'EEE, MMM d')"
+            ></div>
 
             <!-- ACC deploy dots (one per round) -->
             @for (dot of bar.accDots; track dot.label; let last = $last) {
-              <div class="absolute z-10 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full
-                          ring-2 ring-white"
-                   [class]="dot.isFinal ? 'bg-indigo-500' : 'bg-blue-400'"
-                   [style.left.%]="dot.pct"
-                   [title]="dot.label">
-              </div>
+              <div
+                class="absolute z-10 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full ring-2 ring-white"
+                [class]="dot.isFinal ? 'bg-indigo-500' : 'bg-blue-400'"
+                [style.left.%]="dot.pct"
+                [title]="dot.label"
+              ></div>
             }
 
             <!-- PRD deploy dot -->
-            <div class="absolute z-10 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full
-                        ring-2 ring-white"
-                 [class]="bar.colorCls"
-                 [style.left.%]="bar.prdPct"
-                 [title]="'PRD: ' + (bar.release.prdDeployDate | date:'EEE, MMM d')">
-            </div>
+            <div
+              class="absolute z-10 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full ring-2 ring-white"
+              [class]="bar.colorCls"
+              [style.left.%]="bar.prdPct"
+              [title]="'PRD: ' + (bar.release.prdDeployDate | date: 'EEE, MMM d')"
+            ></div>
 
             <!-- First ACC date label -->
             @if (bar.accDots.length > 0) {
-              <span class="absolute top-7 -translate-x-1/2 whitespace-nowrap text-xs text-blue-600"
-                    [style.left.%]="bar.accDots[0].pct">
-                ACC {{ bar.release.accDeployments[0].date | date:'MMM d' }}
-                @if (bar.accDots.length > 1) {<span class="text-indigo-500"> ×{{ bar.accDots.length }}</span>}
+              <span
+                class="absolute top-7 -translate-x-1/2 whitespace-nowrap text-xs text-blue-600"
+                [style.left.%]="bar.accDots[0].pct"
+              >
+                ACC {{ bar.release.accDeployments[0].date | date: 'MMM d' }}
+                @if (bar.accDots.length > 1) {
+                  <span class="text-indigo-500"> ×{{ bar.accDots.length }}</span>
+                }
               </span>
             }
 
+            <!-- First TST date label -->
+            <span
+              class="absolute top-7 -translate-x-1/2 whitespace-nowrap text-xs text-slate-600"
+              [style.left.%]="bar.tstPct"
+            >
+              TST {{ bar.release.firstTstDeployDate | date: 'MMM d' }}
+            </span>
+
             <!-- PRD date label -->
-            <span class="absolute top-7 -translate-x-1/2 whitespace-nowrap text-xs text-orange-600"
-                  [style.left.%]="bar.prdPct">
-              PRD {{ bar.release.prdDeployDate | date:'MMM d' }}
+            <span
+              class="absolute top-7 -translate-x-1/2 whitespace-nowrap text-xs text-orange-600"
+              [style.left.%]="bar.prdPct"
+            >
+              PRD {{ bar.release.prdDeployDate | date: 'MMM d' }}
             </span>
           </div>
         }
@@ -81,10 +121,16 @@
   <!-- Legend -->
   <div class="mt-8 flex flex-wrap items-center gap-5 border-t pt-4 text-xs text-gray-600">
     <span class="flex items-center gap-1.5">
+      <span class="h-3 w-4 rounded bg-slate-200 opacity-90"></span> Development Period
+    </span>
+    <span class="flex items-center gap-1.5">
       <span class="h-3 w-4 rounded bg-blue-400 opacity-80"></span> ACC Testing Period
     </span>
     <span class="flex items-center gap-1.5">
       <span class="h-4 w-4 rounded-full bg-blue-500"></span> ACC Deploy
+    </span>
+    <span class="flex items-center gap-1.5">
+      <span class="h-4 w-4 rounded-full bg-slate-500"></span> First TST Deploy
     </span>
     <span class="flex items-center gap-1.5">
       <span class="h-4 w-4 rounded-full bg-orange-500"></span> PRD Deploy
