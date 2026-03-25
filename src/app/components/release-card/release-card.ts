@@ -1,7 +1,6 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Release, PRStatus, ReleaseStatus, getEnvironment } from '../../models/release.model';
+import { Release, ReleaseStatus, getEnvironment } from '../../models/release.model';
 import { StatusBadgeComponent } from '../status-badge/status-badge';
 import { PRStatusPanelComponent } from '../pr-status-panel/pr-status-panel';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer';
@@ -27,20 +26,12 @@ const BORDER_COLORS: Record<ReleaseStatus, string> = {
     StatusBadgeComponent,
     PRStatusPanelComponent,
     CountdownTimerComponent,
-    FormsModule,
   ],
   templateUrl: './release-card.html',
 })
 export class ReleaseCardComponent {
   release = input.required<Release>();
   expanded = signal(false);
-  showAccForm = signal(false);
-  newAccDate = signal('');
-
-  prStatusChange = output<{ releaseId: string; prId: string; status: PRStatus }>();
-  statusChange = output<{ releaseId: string; status: ReleaseStatus }>();
-  accDeploymentAdd = output<{ releaseId: string; date: Date; notes?: string }>();
-  deleteRelease = output<string>();
 
   environment = computed(() => getEnvironment(this.release().status));
 
@@ -120,62 +111,8 @@ export class ReleaseCardComponent {
     () => this.release().prs.filter((p) => p.status === 'pending' || p.status === 'draft').length,
   );
 
-  nextStatus = computed(() => this.getNextStatus(this.release()));
-
-  nextStatusLabel = computed(() => {
-    const labels: Record<ReleaseStatus, string> = {
-      development: 'Development',
-      'acc-setup': 'Setup ACC',
-      'acc-review': 'ACC Review',
-      'acc-release': 'To Release in ACC',
-      'acc-done': 'ACC Done',
-      'prd-setup': 'Setup PRD',
-      'prd-review': 'PRD Review',
-      'prd-release': 'To Release in PRD',
-      'prd-done': 'Completed',
-      'on-hold': 'On Hold',
-    };
-    return labels[this.nextStatus()] ?? this.nextStatus();
-  });
-
-  advanceLabel = computed(() => {
-    const r = this.release();
-    const next = this.nextStatus();
-    if (r.status === 'acc-done' && next === 'acc-setup') {
-      return `Start ACC Round ${r.currentAccRound + 1}`;
-    }
-    return `Advance to ${this.nextStatusLabel()}`;
-  });
-
   toggle(): void {
     this.expanded.update((v) => !v);
-  }
-
-  onPRChange(event: { pr: { id: string }; status: PRStatus }): void {
-    this.prStatusChange.emit({
-      releaseId: this.release().id,
-      prId: event.pr.id,
-      status: event.status,
-    });
-  }
-
-  advance(): void {
-    const next = this.nextStatus();
-    if (next && next !== this.release().status) {
-      this.statusChange.emit({ releaseId: this.release().id, status: next });
-    }
-  }
-
-  onDelete(): void {
-    this.deleteRelease.emit(this.release().id);
-  }
-
-  submitAccRound(): void {
-    const dateStr = this.newAccDate();
-    if (!dateStr) return;
-    this.accDeploymentAdd.emit({ releaseId: this.release().id, date: new Date(dateStr) });
-    this.newAccDate.set('');
-    this.showAccForm.set(false);
   }
 
   private withTime(date: Date | null, hours: number, minutes: number): Date | null {

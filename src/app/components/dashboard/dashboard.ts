@@ -3,11 +3,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ReleaseService } from '../../services/release.service';
-import { Release, PRStatus, ReleaseStatus, ViewMode } from '../../models/release.model';
+import { Release, ReleaseStatus, ViewMode } from '../../models/release.model';
 import { ReleaseCardComponent } from '../release-card/release-card';
 import { TimelineViewComponent } from '../timeline-view/timeline-view';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer';
-import { AddReleaseModalComponent } from '../add-release-modal/add-release-modal';
 import { StatsRowComponent } from '../stats-row/stats-row';
 import { GithubSettingsComponent } from '../github-settings/github-settings';
 
@@ -20,7 +19,6 @@ import { GithubSettingsComponent } from '../github-settings/github-settings';
     ReleaseCardComponent,
     TimelineViewComponent,
     CountdownTimerComponent,
-    AddReleaseModalComponent,
     StatsRowComponent,
     GithubSettingsComponent,
   ],
@@ -29,12 +27,11 @@ import { GithubSettingsComponent } from '../github-settings/github-settings';
 export class DashboardComponent {
   private svc = inject(ReleaseService);
 
-  showAddModal = signal(false);
   showSettingsModal = signal(false);
 
-  releases = toSignal(this.svc.releases$, { initialValue: [] });
+  // Use computed status based on current date/time
+  releases = toSignal(this.svc.getCurrentStatusReleases(), { initialValue: [] });
   nextActions = toSignal(this.svc.getNextActions(), { initialValue: [] });
-  saveStatus = this.svc.saveStatus;
 
   view = signal<ViewMode>('kanban');
 
@@ -195,25 +192,5 @@ export class DashboardComponent {
   setView(v: ViewMode): void {
     this.view.set(v);
   }
-
-  onAddRelease(release: Release): void {
-    this.svc.addRelease(release);
-    this.showAddModal.set(false);
-  }
-
-  onAddAccDeployment(e: { releaseId: string; date: Date; notes?: string }): void {
-    this.svc.addAccDeployment(e.releaseId, e.date, e.notes);
-  }
-
-  onPRChange(e: { releaseId: string; prId: string; status: PRStatus }): void {
-    this.svc.updatePRStatus(e.releaseId, e.prId, e.status);
-  }
-
-  onStatusChange(e: { releaseId: string; status: ReleaseStatus }): void {
-    this.svc.updateReleaseStatus(e.releaseId, e.status);
-  }
-
-  onDeleteRelease(releaseId: string): void {
-    this.svc.deleteRelease(releaseId);
-  }
 }
+

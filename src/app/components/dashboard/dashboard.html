@@ -89,52 +89,6 @@
               Guide
             </a>
 
-            <!-- Save status indicator -->
-            @if (saveStatus() === 'saving') {
-              <span class="flex items-center gap-1.5 text-xs text-gray-400">
-                <svg
-                  class="h-3.5 w-3.5 animate-spin"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
-                Saving…
-              </span>
-            }
-            @if (saveStatus() === 'saved') {
-              <span class="flex items-center gap-1 text-xs text-emerald-600">
-                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Saved
-              </span>
-            }
-            @if (saveStatus() === 'error') {
-              <span class="flex items-center gap-1 text-xs text-red-500">
-                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 9v2m0 4h.01M12 3a9 9 0 110 18A9 9 0 0112 3z"
-                  />
-                </svg>
-                Save failed
-              </span>
-            }
-
             <!-- Settings button -->
             <button
               (click)="showSettingsModal.set(true)"
@@ -158,21 +112,7 @@
               Storage
             </button>
 
-            <!-- Add Release button -->
-            <button
-              (click)="showAddModal.set(true)"
-              class="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
-            >
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              New Release
-            </button>
+            <!-- Settings button -->
           </div>
         </div>
       </div>
@@ -333,10 +273,6 @@
                           <app-release-card
                             class="block"
                             [release]="release"
-                            (prStatusChange)="onPRChange($event)"
-                            (statusChange)="onStatusChange($event)"
-                            (accDeploymentAdd)="onAddAccDeployment($event)"
-                            (deleteRelease)="onDeleteRelease($event)"
                           />
                         }
                         @if (col.releases.length === 0) {
@@ -360,10 +296,6 @@
     </div>
   </main>
 </div>
-
-@if (showAddModal()) {
-  <app-add-release-modal (save)="onAddRelease($event)" (cancel)="showAddModal.set(false)" />
-}
 
 @if (showSettingsModal()) {
   <app-github-settings (close)="showSettingsModal.set(false)" />
