@@ -84,16 +84,14 @@
               [title]="'PRD: ' + (bar.release.prdDeployDate | date: 'EEE, MMM d')"
             ></div>
 
-            <!-- First ACC date label -->
-            @if (bar.accDots.length > 0) {
+            <!-- ACC date labels for all rounds -->
+            @for (dot of bar.accDots; track dot.label) {
               <span
                 class="absolute top-7 -translate-x-1/2 whitespace-nowrap text-xs text-blue-600"
-                [style.left.%]="bar.accDots[0].pct"
+                [class.text-indigo-500]="dot.isFinal"
+                [style.left.%]="dot.pct"
               >
-                ACC {{ bar.release.accDeployments[0].date | date: 'MMM d' }}
-                @if (bar.accDots.length > 1) {
-                  <span class="text-indigo-500"> ×{{ bar.accDots.length }}</span>
-                }
+                {{ dot.label }}
               </span>
             }
 

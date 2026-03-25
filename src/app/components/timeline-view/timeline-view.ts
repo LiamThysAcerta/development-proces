@@ -105,8 +105,7 @@ export class TimelineViewComponent {
         pct: this.pct(a.date),
         label:
           accs.length > 1
-            ? `ACC round ${i + 1}: ` +
-              a.date.toLocaleDateString('en', { month: 'short', day: 'numeric' })
+            ? `ACC ${i + 1}: ` + a.date.toLocaleDateString('en', { month: 'short', day: 'numeric' })
             : 'ACC: ' + a.date.toLocaleDateString('en', { month: 'short', day: 'numeric' }),
         isFinal: i === accs.length - 1 && accs.length > 1,
       }));
