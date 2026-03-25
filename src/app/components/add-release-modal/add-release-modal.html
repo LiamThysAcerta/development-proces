@@ -1,12 +1,21 @@
 <!-- Backdrop -->
-<div class="fixed inset-0 z-30 flex items-center justify-center bg-black/40 p-4">
+<div
+  class="fixed inset-0 z-30 flex items-start justify-center bg-black/40 p-4 pt-16 overflow-y-auto"
+>
   <!-- Modal -->
-  <div class="w-full max-w-lg rounded-2xl bg-white shadow-xl">
+  <div class="w-full max-w-2xl rounded-2xl bg-white shadow-xl mb-8">
     <!-- Header -->
     <div class="flex items-center justify-between border-b px-6 py-4">
-      <h2 class="text-base font-semibold text-gray-900">New Release</h2>
+      <div>
+        <h2 class="text-base font-semibold text-gray-900">Create New Release</h2>
+        <p class="text-xs text-gray-500 mt-0.5">
+          Fill in the details, then copy the generated snippet into
+          <code class="rounded bg-gray-100 px-1">RELEASES_SCHEDULE</code> in
+          <code class="rounded bg-gray-100 px-1">release.service.ts</code>
+        </p>
+      </div>
       <button
-        (click)="cancel.emit()"
+        (click)="close.emit()"
         class="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -21,65 +30,81 @@
     </div>
 
     <!-- Form -->
-    <form (ngSubmit)="onSubmit()" #f="ngForm" class="px-6 py-5 space-y-4">
-      <!-- Version & Branch -->
-      <div class="grid grid-cols-2 gap-4">
+    <form (ngSubmit)="generate()" #f="ngForm" class="px-6 py-5 space-y-4">
+      <!-- ID, Version & Branch -->
+      <div class="grid grid-cols-3 gap-4">
         <div>
-          <label class="mb-1 block text-xs font-medium text-gray-700"
-            >Version <span class="text-red-500">*</span></label
-          >
+          <label class="mb-1 block text-xs font-medium text-gray-700">
+            ID <span class="font-normal text-gray-400">(auto)</span>
+          </label>
+          <input
+            name="id"
+            [(ngModel)]="form.id"
+            placeholder="rel-2605"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-xs font-medium text-gray-700">
+            Version <span class="text-red-500">*</span>
+          </label>
           <input
             name="version"
             [(ngModel)]="form.version"
             (blur)="onVersionChange()"
             required
-            placeholder="v2.8.0"
+            placeholder="26.05.0"
             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
         <div>
-          <label class="mb-1 block text-xs font-medium text-gray-700"
-            >Branch Name <span class="text-red-500">*</span></label
-          >
+          <label class="mb-1 block text-xs font-medium text-gray-700">
+            Branch <span class="text-red-500">*</span>
+          </label>
           <input
             name="branchName"
             [(ngModel)]="form.branchName"
             required
-            placeholder="release/2.8.0"
+            placeholder="release/26-05"
             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
       </div>
 
-      <!-- Description -->
-      <div>
-        <label class="mb-1 block text-xs font-medium text-gray-700">Description</label>
-        <input
-          name="description"
-          [(ngModel)]="form.description"
-          placeholder="Short description of this release"
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-      </div>
-
-      <!-- Team -->
-      <div>
-        <label class="mb-1 block text-xs font-medium text-gray-700">Team Members</label>
-        <input
-          name="team"
-          [(ngModel)]="form.team"
-          placeholder="Alice, Bob, Carol"
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-        <p class="mt-1 text-xs text-gray-400">Comma-separated names</p>
+      <!-- First TST Deploy & PRD Deploy -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="mb-1 block text-xs font-medium text-gray-700">
+            First TST Deploy Date <span class="text-red-500">*</span>
+          </label>
+          <input
+            name="firstTstDeployDate"
+            type="date"
+            [(ngModel)]="form.firstTstDeployDate"
+            required
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-xs font-medium text-gray-700">
+            PRD Deploy Date <span class="text-red-500">*</span>
+          </label>
+          <input
+            name="prdDeployDate"
+            type="date"
+            [(ngModel)]="form.prdDeployDate"
+            required
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
       </div>
 
       <!-- ACC Deployments -->
       <div>
         <div class="mb-1.5 flex items-center justify-between">
-          <label class="text-xs font-medium text-gray-700"
-            >ACC Deployments <span class="text-red-500">*</span></label
-          >
+          <label class="text-xs font-medium text-gray-700">
+            ACC Deployments <span class="text-red-500">*</span>
+          </label>
           <button
             type="button"
             (click)="addAccRound()"
@@ -106,9 +131,8 @@
                     ? 'bg-indigo-100 text-indigo-700'
                     : 'bg-blue-100 text-blue-700'
                 "
+                >{{ i + 1 }}</span
               >
-                {{ i + 1 }}
-              </span>
               <input
                 type="date"
                 [name]="'accDate-' + i"
@@ -142,77 +166,113 @@
         </div>
       </div>
 
-      <!-- First TST Deploy Date -->
-      <div>
-        <label class="mb-1 block text-xs font-medium text-gray-700"
-          >First TST Deploy Date <span class="text-red-500">*</span></label
-        >
-        <input
-          name="firstTstDeployDate"
-          type="date"
-          [(ngModel)]="form.firstTstDeployDate"
-          required
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
+      <!-- Description & Team -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="mb-1 block text-xs font-medium text-gray-700">Description</label>
+          <input
+            name="description"
+            [(ngModel)]="form.description"
+            placeholder="e.g. 06/03/2026"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-xs font-medium text-gray-700">Team Members</label>
+          <input
+            name="team"
+            [(ngModel)]="form.team"
+            placeholder="Release Team, DevOps"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+          <p class="mt-1 text-xs text-gray-400">Comma-separated</p>
+        </div>
       </div>
 
-      <!-- PRD Deploy Date -->
-      <div>
-        <label class="mb-1 block text-xs font-medium text-gray-700"
-          >PRD Deploy Date <span class="text-red-500">*</span></label
-        >
-        <input
-          name="prdDeployDate"
-          type="date"
-          [(ngModel)]="form.prdDeployDate"
-          (blur)="onPrdDateChange()"
-          required
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-      </div>
-
-      <!-- PRD Setup Date -->
-      <div>
-        <label class="mb-1 block text-xs font-medium text-gray-700">PRD Setup Date</label>
-        <input
-          name="prdSetupDate"
-          type="date"
-          [(ngModel)]="form.prdSetupDate"
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-        <p class="mt-1 text-xs text-gray-400">
-          Friday before PRD week. Auto-calculated from PRD date if left empty.
-        </p>
-      </div>
-
-      <!-- Repository URL -->
-      <div>
-        <label class="mb-1 block text-xs font-medium text-gray-700">Repository URL</label>
-        <input
-          name="repositoryUrl"
-          [(ngModel)]="form.repositoryUrl"
-          placeholder="https://github.com/org/repo"
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-      </div>
-
-      <!-- Actions -->
-      <div class="flex justify-end gap-3 pt-2">
-        <button
-          type="button"
-          (click)="cancel.emit()"
-          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Cancel
-        </button>
+      <!-- Generate button -->
+      <div class="flex justify-end pt-1">
         <button
           type="submit"
-          [disabled]="!canSubmit"
-          class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          [disabled]="!canGenerate"
+          class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40 transition-colors"
         >
-          Add Release
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+            />
+          </svg>
+          Generate Snippet
         </button>
       </div>
     </form>
+
+    <!-- Generated code output -->
+    @if (generatedCode) {
+      <div class="border-t px-6 pb-6">
+        <div class="mt-4">
+          <div class="mb-2 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg
+                class="h-4 w-4 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <p class="text-xs font-semibold text-gray-700">
+                Paste into the
+                <code class="rounded bg-gray-100 px-1">RELEASES_SCHEDULE</code>
+                array in
+                <code class="rounded bg-gray-100 px-1">release.service.ts</code>
+              </p>
+            </div>
+            <button
+              type="button"
+              (click)="copyToClipboard()"
+              [class]="
+                copied
+                  ? 'flex items-center gap-1.5 rounded-lg bg-green-600 px-3 py-1.5 text-xs font-medium text-white transition-colors'
+                  : 'flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors'
+              "
+            >
+              @if (copied) {
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Copied!
+              } @else {
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+                Copy
+              }
+            </button>
+          </div>
+          <pre
+            class="overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 px-5 py-4 text-xs leading-relaxed text-green-300 font-mono whitespace-pre"
+            >{{ generatedCode }}</pre
+          >
+        </div>
+      </div>
+    }
   </div>
 </div>

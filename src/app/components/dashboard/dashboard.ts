@@ -8,7 +8,7 @@ import { ReleaseCardComponent } from '../release-card/release-card';
 import { TimelineViewComponent } from '../timeline-view/timeline-view';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer';
 import { StatsRowComponent } from '../stats-row/stats-row';
-import { GithubSettingsComponent } from '../github-settings/github-settings';
+import { AddReleaseModalComponent } from '../add-release-modal/add-release-modal';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,14 +20,14 @@ import { GithubSettingsComponent } from '../github-settings/github-settings';
     TimelineViewComponent,
     CountdownTimerComponent,
     StatsRowComponent,
-    GithubSettingsComponent,
+    AddReleaseModalComponent,
   ],
   templateUrl: './dashboard.html',
 })
 export class DashboardComponent {
   private svc = inject(ReleaseService);
 
-  showSettingsModal = signal(false);
+  showCreateModal = signal(false);
 
   // Use computed status based on current date/time
   releases = toSignal(this.svc.getCurrentStatusReleases(), { initialValue: [] });

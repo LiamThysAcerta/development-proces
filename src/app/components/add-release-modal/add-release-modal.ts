@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Release } from '../../models/release.model';
 
 @Component({
   selector: 'app-add-release-modal',
@@ -9,23 +8,23 @@ import { Release } from '../../models/release.model';
   templateUrl: './add-release-modal.html',
 })
 export class AddReleaseModalComponent {
-  @Output() save = new EventEmitter<Release>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() close = new EventEmitter<void>();
 
   form = {
+    id: '',
     version: '',
     branchName: '',
     description: '',
     team: '',
-    repositoryUrl: '',
     firstTstDeployDate: '',
     prdDeployDate: '',
-    prdSetupDate: '',
   };
 
-  accDates: string[] = [''];
+  accDates: string[] = ['', ''];
+  generatedCode = '';
+  copied = false;
 
-  get canSubmit(): boolean {
+  get canGenerate(): boolean {
     return (
       !!this.form.version &&
       !!this.form.branchName &&
@@ -36,14 +35,21 @@ export class AddReleaseModalComponent {
   }
 
   onVersionChange(): void {
-    if (this.form.version && !this.form.branchName) {
-      this.form.branchName = `release/${this.form.version.replace(/^v/, '')}`;
+    const v = this.form.version;
+    if (!v) return;
+    if (!this.form.branchName) {
+      const parts = v.split('.');
+      this.form.branchName =
+        parts.length >= 2
+          ? `release/${parts[0]}.${parts[1].padStart(2, '0')}`
+          : `release/${v.replace(/^v/, '')}`;
     }
-  }
-
-  onPrdDateChange(): void {
-    if (this.form.prdDeployDate && !this.form.prdSetupDate) {
-      this.form.prdSetupDate = this.calcFridayBeforePrdWeek(this.form.prdDeployDate);
+    if (!this.form.id) {
+      const parts = v.split('.');
+      this.form.id =
+        parts.length >= 2
+          ? `rel-${parts[0].slice(-2)}${parts[1].padStart(2, '0')}`
+          : `rel-${v.replace(/\./g, '')}`;
     }
   }
 
@@ -55,80 +61,57 @@ export class AddReleaseModalComponent {
     this.accDates.splice(index, 1);
   }
 
-  onSubmit(): void {
-    const firstTstDate = new Date(this.form.firstTstDeployDate);
-    const prdDate = new Date(this.form.prdDeployDate);
-    const prdSetupDate = this.form.prdSetupDate
-      ? new Date(this.form.prdSetupDate)
-      : this.fridayBeforePrdWeek(prdDate);
-    const accDeployments = this.accDates
-      .filter((d) => !!d)
-      .map((d, i) => ({ id: `acc-${Date.now()}-${i}`, date: new Date(d) }));
+  generate(): void {
+    const validAcc = this.accDates.filter((d) => !!d);
+    const id = this.form.id || `rel-${Date.now()}`;
 
-    accDeployments.sort((a, b) => a.date.getTime() - b.date.getTime());
-
-    const firstAccDate = accDeployments[0].date;
-    const accEnd = accDeployments[accDeployments.length - 1].date;
-
-    const release: Release = {
-      id: `rel-${Date.now()}`,
-      version: this.form.version,
-      branchName: this.form.branchName,
-      status: 'development',
-      firstTstDeployDate: firstTstDate,
-      currentAccRound: 1,
-      description: this.form.description,
-      team: this.form.team
-        .split(',')
-        .map((t) => t.trim())
-        .filter(Boolean),
-      repositoryUrl: this.form.repositoryUrl || undefined,
-      accDeployments,
-      prdDeployDate: prdDate,
-      prdSetupDate,
-      phases: [
-        {
-          id: `ph-${Date.now()}-tst`,
-          name: 'TST Development',
-          environment: 'TST',
-          startDate: firstTstDate,
-          endDate: firstAccDate,
-          completed: false,
-        },
-        {
-          id: `ph-${Date.now()}-acc`,
-          name: 'ACC Testing',
-          environment: 'ACC',
-          startDate: firstAccDate,
-          endDate: accEnd,
-          completed: false,
-        },
-        {
-          id: `ph-${Date.now()}-prd`,
-          name: 'PRD Deployment',
-          environment: 'PRD',
-          startDate: prdSetupDate,
-          endDate: prdDate,
-          completed: false,
-        },
-      ],
-      prs: [],
+    const fmt = (dateStr: string): { code: string; comment: string } => {
+      const d = new Date(dateStr);
+      const mon = d.toLocaleString('en-US', { month: 'short' });
+      return {
+        code: `new Date(${d.getFullYear()}, ${d.getMonth()}, ${d.getDate()})`,
+        comment: `// ${mon} ${d.getDate()}, ${d.getFullYear()}`,
+      };
     };
 
-    this.save.emit(release);
+    const accLines = validAcc
+      .map((d) => {
+        const { code, comment } = fmt(d);
+        return `    { date: ${code} }, ${comment}`;
+      })
+      .join('\n');
+
+    const tst = fmt(this.form.firstTstDeployDate);
+    const prd = fmt(this.form.prdDeployDate);
+
+    const teamMembers = this.form.team
+      ? this.form.team
+          .split(',')
+          .map((t) => `'${t.trim()}'`)
+          .join(', ')
+      : `'Release Team'`;
+
+    const descLine = this.form.description ? `\n  .description('${this.form.description}')` : '';
+
+    this.generatedCode =
+      `ReleaseBuilder.from('${id}')\n` +
+      `  .version('${this.form.version}')\n` +
+      `  .firstTstDeploy(${tst.code}) ${tst.comment}\n` +
+      `  .accDeployments([\n${accLines}\n  ])\n` +
+      `  .prdDeploy(${prd.code}) ${prd.comment}\n` +
+      `  .branch('${this.form.branchName}')${descLine}\n` +
+      `  .team([${teamMembers}])\n` +
+      `  .build(),`;
+
+    this.copied = false;
   }
 
-  private calcFridayBeforePrdWeek(dateStr: string): string {
-    const d = this.fridayBeforePrdWeek(new Date(dateStr));
-    return d.toISOString().slice(0, 10);
-  }
-
-  private fridayBeforePrdWeek(prdDate: Date): Date {
-    const d = new Date(prdDate);
-    const day = d.getDay();
-    const mondayOffset = day === 0 ? 6 : day - 1;
-    d.setDate(d.getDate() - mondayOffset);
-    d.setDate(d.getDate() - 3);
-    return d;
+  copyToClipboard(): void {
+    navigator.clipboard.writeText(this.generatedCode).then(() => {
+      this.copied = true;
+      setTimeout(() => {
+        this.copied = false;
+      }, 2000);
+    });
   }
 }
