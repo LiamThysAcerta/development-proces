@@ -270,10 +270,7 @@
                       <!-- Cards -->
                       <div class="space-y-3 min-h-16">
                         @for (release of col.releases; track release.id) {
-                          <app-release-card
-                            class="block"
-                            [release]="release"
-                          />
+                          <app-release-card class="block" [release]="release" />
                         }
                         @if (col.releases.length === 0) {
                           <div

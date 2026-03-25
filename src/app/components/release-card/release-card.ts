@@ -21,12 +21,7 @@ const BORDER_COLORS: Record<ReleaseStatus, string> = {
 @Component({
   selector: 'app-release-card',
   standalone: true,
-  imports: [
-    DatePipe,
-    StatusBadgeComponent,
-    PRStatusPanelComponent,
-    CountdownTimerComponent,
-  ],
+  imports: [DatePipe, StatusBadgeComponent, PRStatusPanelComponent, CountdownTimerComponent],
   templateUrl: './release-card.html',
 })
 export class ReleaseCardComponent {

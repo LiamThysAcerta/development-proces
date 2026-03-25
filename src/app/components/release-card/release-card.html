@@ -41,7 +41,9 @@
       <span class="flex items-center gap-1.5">
         <span class="h-2 w-2 rounded-full bg-slate-400"></span>
         <span class="text-gray-500">TST</span>
-        <span class="font-medium text-gray-700">{{ release().firstTstDeployDate | date: 'MMM d' }}</span>
+        <span class="font-medium text-gray-700">{{
+          release().firstTstDeployDate | date: 'MMM d'
+        }}</span>
       </span>
       @if (firstAccDate()) {
         <span class="flex items-center gap-1.5">
@@ -153,17 +155,17 @@
               ></span>
               <app-status-badge [status]="phase.environment" />
               <span class="text-gray-700">{{ phase.name }}</span>
-              <span class="ml-auto text-gray-400">{{ phase.startDate | date: 'MMM d' }} &ndash; {{ phase.endDate | date: 'MMM d' }}</span>
+              <span class="ml-auto text-gray-400"
+                >{{ phase.startDate | date: 'MMM d' }} &ndash;
+                {{ phase.endDate | date: 'MMM d' }}</span
+              >
             </div>
           }
         }
       </div>
 
       <!-- PRs -->
-      <app-pr-status-panel
-        [prs]="release().prs"
-        [repositoryUrl]="release().repositoryUrl ?? ''"
-      />
+      <app-pr-status-panel [prs]="release().prs" [repositoryUrl]="release().repositoryUrl ?? ''" />
     </div>
   }
 </div>

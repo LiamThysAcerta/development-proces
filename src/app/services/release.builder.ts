@@ -104,7 +104,8 @@ export class ReleaseBuilder {
     if (!this.release.version) throw new Error('Version is required');
     if (!this.release.branchName) throw new Error('Branch name is required');
     if (!this.release.firstTstDeployDate) throw new Error('First TST deploy date is required');
-    if (!this.release.accDeployments?.length) throw new Error('At least one ACC deployment is required');
+    if (!this.release.accDeployments?.length)
+      throw new Error('At least one ACC deployment is required');
     if (!this.release.prdDeployDate) throw new Error('PRD deploy date is required');
 
     const firstAccDate = this.release.accDeployments![0].date;

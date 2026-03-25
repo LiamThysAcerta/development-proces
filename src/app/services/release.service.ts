@@ -80,7 +80,9 @@ export class ReleaseService {
     // ACC phases
     if (firstAccDate && now >= firstAccDate) {
       const currentAccDate =
-        release.accDeployments[Math.min(release.currentAccRound - 1, release.accDeployments.length - 1)]?.date;
+        release.accDeployments[
+          Math.min(release.currentAccRound - 1, release.accDeployments.length - 1)
+        ]?.date;
 
       // Check if on deploy day for current round
       if (currentAccDate && this.isSameDay(now, currentAccDate)) {
