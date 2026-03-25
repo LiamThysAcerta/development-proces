@@ -78,8 +78,7 @@
 
             <!-- PRD deploy dot -->
             <div
-              class="absolute z-10 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full ring-2 ring-white"
-              [class]="bar.colorCls"
+              class="absolute z-10 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full bg-red-500 ring-2 ring-white"
               [style.left.%]="bar.prdPct"
               [title]="'PRD: ' + (bar.release.prdDeployDate | date: 'EEE, MMM d')"
             ></div>
@@ -122,16 +121,19 @@
       <span class="h-3 w-4 rounded bg-slate-200 opacity-90"></span> Development Period
     </span>
     <span class="flex items-center gap-1.5">
-      <span class="h-3 w-4 rounded bg-blue-400 opacity-80"></span> ACC Testing Period
+      <span class="h-3 w-4 rounded bg-blue-200 opacity-80"></span> ACC Testing Period
     </span>
     <span class="flex items-center gap-1.5">
-      <span class="h-4 w-4 rounded-full bg-blue-500"></span> ACC Deploy
+      <span class="h-4 w-4 rounded-full bg-blue-400"></span> ACC Deploy
+    </span>
+    <span class="flex items-center gap-1.5">
+      <span class="h-4 w-4 rounded-full bg-indigo-500"></span> ACC Deploy (Final Round)
     </span>
     <span class="flex items-center gap-1.5">
       <span class="h-4 w-4 rounded-full bg-slate-500"></span> First TST Deploy
     </span>
     <span class="flex items-center gap-1.5">
-      <span class="h-4 w-4 rounded-full bg-orange-500"></span> PRD Deploy
+      <span class="h-4 w-4 rounded-full bg-red-500"></span> PRD Deploy
     </span>
     <span class="flex items-center gap-1.5">
       <span class="inline-block h-4 w-0.5 border-l-2 border-dashed border-red-400"></span> Today
